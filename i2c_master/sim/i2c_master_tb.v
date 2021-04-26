@@ -12,7 +12,7 @@ wire tb_busy;
 
 i2c_master i2c_masteri (
     .en(tb_en),
-    .mode(2'd0),
+    .mode(2'd1),
     .clk(tb_clk),
     .slave_address(7'b1001001),
     .target_register(8'b10010110),
