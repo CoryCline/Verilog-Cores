@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Webtalk v2020.1.1 (64-bit)
+# SW Build 2960000 on Wed Aug  5 22:57:21 MDT 2020
+# IP Build 2956692 on Thu Aug  6 01:41:30 MDT 2020
+# Start of session at: Sun Apr 25 21:08:20 2021
+# Process ID: 31044
+# Current directory: /home/student/Desktop/Cores/i2c_master/i2c_master_vivado/i2c_master_vivado.sim/i2c_master_tb/behav/xsim
+# Command line: wbtcv -mode batch -source /home/student/Desktop/Cores/i2c_master/i2c_master_vivado/i2c_master_vivado.sim/i2c_master_tb/behav/xsim/xsim.dir/i2c_master_tb_behav/webtalk/xsim_webtalk.tcl -notrace
+# Log file: /home/student/Desktop/Cores/i2c_master/i2c_master_vivado/i2c_master_vivado.sim/i2c_master_tb/behav/xsim/webtalk.log
+# Journal file: /home/student/Desktop/Cores/i2c_master/i2c_master_vivado/i2c_master_vivado.sim/i2c_master_tb/behav/xsim/webtalk.jou
+#-----------------------------------------------------------
+source /home/student/Desktop/Cores/i2c_master/i2c_master_vivado/i2c_master_vivado.sim/i2c_master_tb/behav/xsim/xsim.dir/i2c_master_tb_behav/webtalk/xsim_webtalk.tcl -notrace
+INFO: [Common 17-206] Exiting Webtalk at Sun Apr 25 21:08:20 2021...
