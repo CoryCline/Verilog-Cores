@@ -51,6 +51,11 @@ begin
             scl <= 1'b1;
         end
     end
+    else 
+    begin
+        scl <= 1'bz;
+        sda <= 1'bz;
+    end
 end
 
 always @(posedge i2c_dclk)
