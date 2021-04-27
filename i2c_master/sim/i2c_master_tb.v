@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module i2c_master_tb();
+module i2c_controller_tb();
 
 reg tb_clk = 1'b1;
 reg tb_en  = 1'b0;
@@ -10,11 +10,11 @@ wire tb_sda;
 wire tb_busy;
 
 
-i2c_master i2c_masteri (
+i2c_controller i2c_controlleri (
     .en(tb_en),
     .mode(2'd1),
     .clk(tb_clk),
-    .slave_address(7'b1001001),
+    .peripheral_address(7'b1001001),
     .target_register(8'b10010110),
     .rw(1'b1),
     .din(16'b1010101011001100),
