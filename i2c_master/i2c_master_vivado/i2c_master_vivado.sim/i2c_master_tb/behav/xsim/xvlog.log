@@ -1,7 +1,0 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/student/Desktop/Verilog-Cores/i2c_master/src/i2c_clk.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module i2c_clk
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/student/Desktop/Verilog-Cores/i2c_master/src/i2c_master.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module i2c_master
-INFO: [VRFC 10-2458] undeclared symbol i2c_sclk, assumed default net type wire [/home/student/Desktop/Verilog-Cores/i2c_master/src/i2c_master.v:20]
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/student/Desktop/Verilog-Cores/i2c_master/sim/i2c_master_tb.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module i2c_master_tb
