@@ -7,10 +7,18 @@ module i2c_controller (
     input wire          rw,
     input wire [15:0]   din,
     output reg [15:0]   dout,
-    output reg          scl = 1'b1,
-    output reg          sda = 1'b1,
+    output wire         scl,
+    inout wire          sda,
     output reg          busy = 1'b0
 );
+
+reg sda_idle = 1'b1;
+reg sda_output = 1'b1;
+assign sda = sda_idle ? 1'bz : sda_output;
+
+reg scl_idle = 1'b1;
+reg scl_output = 1'b1;
+assign scl = scl_idle ? 1'bz : scl_output;
 
 wire i2c_dclk;
 wire i2c_sclk;
@@ -47,17 +55,14 @@ begin
     begin
         if (scl_enable)
         begin
-            scl <= i2c_sclk;
+            scl_idle <= 1'b0;
+            scl_output <= i2c_sclk;
         end
         else 
         begin
-            scl <= 1'b1;
+            scl_idle <= 1'b10;
+            scl_output <= 1'b1;
         end
-    end
-    else 
-    begin
-        scl <= 1'bz;
-        sda <= 1'bz;
     end
 end
 
@@ -83,7 +88,8 @@ begin
         case (state)
             STATE_READY:
             begin
-                sda <= 1'b1;
+                sda_idle <= 1'b0;
+                sda_output <= 1'b1;
                 i2c_clock_enable <= 1'b0;
                 state <= STATE_START;
             end
@@ -91,7 +97,8 @@ begin
             STATE_START:
             begin
                 i2c_clock_enable <= 1'b1;
-                sda <= 1'b0;
+                sda_idle <= 1'b0;
+                sda_output <= 1'b0;
                 busy <= 1'b1;
                 state <= STATE_ADDR;
                 peripheral_addr_plus_rw = {peripheral_address, rw};
@@ -104,20 +111,19 @@ begin
             begin
                 if (en)
                 begin
-                    
-
                     bit_cnt <= bit_cnt + 1'b1;
 
                     if (bit_cnt == 4'd8)
                     begin
                         bit_cnt <= 4'd0;
-                        sda <= 1'bz;
+                        sda_idle <= 1'b1;
 
                         state <= STATE_TARGET_REG;
                     end
                     else 
                     begin
-                        sda <= peripheral_addr_plus_rw[7];
+                        sda_idle <= 1'b0;
+                        sda_output <= peripheral_addr_plus_rw[7];
                         peripheral_addr_plus_rw <= {peripheral_addr_plus_rw[6:0], peripheral_addr_plus_rw[7]};
                     end
                 end
@@ -132,7 +138,7 @@ begin
                     if (bit_cnt == 4'd8)
                     begin
                         bit_cnt <= 4'd0;
-                        sda <= 1'bz;
+                        sda_idle <= 1'b1;
 
                         if (rw == 0) // read
                         begin
@@ -146,7 +152,8 @@ begin
                     end
                     else 
                     begin
-                        sda <= target_reg[7];
+                        sda_idle <= 1'b0;
+                        sda_output <= target_reg[7];
                         target_reg <= {target_reg[6:0], target_reg[7]};
                     end
                 end
@@ -160,13 +167,14 @@ begin
 
                     if (bit_cnt == 4'd8)
                     begin
-                        sda <= 1'bz;
+                        sda_idle <= 1'b1;
                         bit_cnt <= 4'd0;
                         state <= STATE_WRITE_BYTE_TWO;
                     end
                     else 
                     begin
-                        sda <= byte_one[7];
+                        sda_idle <= 1'b0;
+                        sda_output <= byte_one[7];
                         byte_one <= {byte_one[6:0], byte_one[7]};
                     end
                 end
@@ -180,12 +188,13 @@ begin
 
                     if (bit_cnt == 4'd8)
                     begin
-                        sda <= 1'bz;
+                        sda_idle <= 1'b1;
                         bit_cnt <= 4'd0;
                         state <= STATE_READ_BYTE_TWO;
                     end
                     else 
                     begin
+                        sda_idle <= 1'b1;
                         byte_one <= {byte_one[7:1], sda};
                     end
                 end
@@ -199,13 +208,14 @@ begin
 
                     if (bit_cnt == 4'd8)
                     begin
-                        sda <= 1'bz;
+                        sda_idle <= 1'b1;
                         bit_cnt <= 4'd0;
                         state <= STATE_STOP;
                     end
                     else 
                     begin
-                        sda <= byte_two[7];
+                        sda_idle <= 1'b0;
+                        sda_output <= byte_two[7];
                         byte_two <= {byte_two[6:0], byte_two[7]};
                     end
                 end
@@ -219,12 +229,13 @@ begin
 
                     if (bit_cnt == 4'd8)
                     begin
-                        sda <= 1'bz;
+                        sda_idle <= 1'b1;
                         bit_cnt <= 4'd0;
                         state <= STATE_STOP;
                     end
                     else 
                     begin
+                        sda_idle <= 1'b1;
                         byte_two <= {byte_two[7:1], sda};
                     end
                 end
@@ -232,8 +243,9 @@ begin
             
             STATE_STOP:
             begin
+                sda_idle <= 1'b1;
+                sda_output <= 1'b1;
                 busy <= 1'b0;
-                sda <= 1'b1;
                 i2c_clock_enable <= 1'b0;
                 state <= STATE_READY;
                 dout <= {byte_one, byte_two};
