@@ -243,7 +243,7 @@ begin
             
             STATE_STOP:
             begin
-                sda_idle <= 1'b1;
+                sda_idle <= 1'b0;
                 sda_output <= 1'b1;
                 busy <= 1'b0;
                 i2c_clock_enable <= 1'b0;
