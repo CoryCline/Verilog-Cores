@@ -13,6 +13,7 @@ module i2c_controller (
 );
 
 wire i2c_dclk;
+wire i2c_sclk;
 i2c_clk i2c_clki (
     .en(en),
     .clk(clk),
@@ -37,12 +38,13 @@ reg         [7:0] target_reg            = 8'd0;
 reg         [7:0] byte_one              = 8'd0;
 reg         [7:0] byte_two              = 8'd0;
 reg               i2c_clock_enable      = 1'b0;
+reg         [7:0] scl_enable            = 1'b0;
 
 always @(posedge clk)
 begin
     if (en)
     begin
-        if (i2c_clock_enable)
+        if (scl_enable)
         begin
             scl <= i2c_sclk;
         end
@@ -58,6 +60,21 @@ begin
     end
 end
 
+always @(negedge i2c_sclk)
+begin
+    if (en)
+    begin
+        if (i2c_clock_enable)
+        begin
+            scl_enable <= 1'b1;
+        end
+        else 
+        begin
+            scl_enable <= 1'b0;
+        end
+    end
+end
+
 always @(posedge i2c_dclk)
 begin
     if (en)
@@ -65,6 +82,7 @@ begin
         case (state)
             STATE_START:
             begin
+                i2c_clock_enable <= 1'b1;
                 sda <= 1'b0;
                 busy <= 1'b1;
                 state <= STATE_ADDR;
@@ -78,7 +96,7 @@ begin
             begin
                 if (en)
                 begin
-                    i2c_clock_enable <= 1'b1;
+                    
 
                     bit_cnt <= bit_cnt + 1'b1;
 
