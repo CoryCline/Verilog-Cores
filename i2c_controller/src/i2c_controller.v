@@ -22,6 +22,7 @@ i2c_clk i2c_clki (
     .dclk(i2c_dclk)
 );
 
+parameter   [7:0] STATE_READY           = 8'd8;
 parameter   [7:0] STATE_START           = 8'd0;
 parameter   [7:0] STATE_ADDR            = 8'd1;
 parameter   [7:0] STATE_TARGET_REG      = 8'd2;
@@ -31,7 +32,7 @@ parameter   [7:0] STATE_WRITE_BYTE_TWO  = 8'd5;
 parameter   [7:0] STATE_READ_BYTE_TWO   = 8'd6;
 parameter   [7:0] STATE_STOP            = 8'd7;
 
-reg         [7:0] state                 = STATE_START;
+reg         [7:0] state                 = STATE_READY;
 reg         [3:0] bit_cnt               = 4'd0;
 reg         [7:0] peripheral_addr_plus_rw    = 8'd0;
 reg         [7:0] target_reg            = 8'd0;
@@ -80,6 +81,13 @@ begin
     if (en)
     begin
         case (state)
+            STATE_READY:
+            begin
+                sda <= 1'b1;
+                i2c_clock_enable <= 1'b0;
+                state <= STATE_START;
+            end
+
             STATE_START:
             begin
                 i2c_clock_enable <= 1'b1;
@@ -227,7 +235,7 @@ begin
                 busy <= 1'b0;
                 sda <= 1'b1;
                 i2c_clock_enable <= 1'b0;
-                state <= STATE_START;
+                state <= STATE_READY;
                 dout <= {byte_one, byte_two};
             end
         endcase
