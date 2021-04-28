@@ -26,7 +26,7 @@ begin
         case (MODE_STATE)                                           // Generate a clock based on the mode
             MODE_STANDARD:                                              // Standard mode at 100 Khz
             begin
-                if (clock_counter < 16'd624)                                // 624 ticks generates a 400 Khz clock
+                if (clock_counter < 16'd124)                                // 124 ticks generates a 400 Khz clock
                 begin
                     clock_counter <= clock_counter + 1'b1;                      // Increment clock_counter
                 end
@@ -38,7 +38,7 @@ begin
 
             MODE_FAST:
             begin
-                if (clock_counter < 16'd155)                                // 155 ticks generates a 1.6 Mhz clock
+                if (clock_counter < 16'd31)                                // 31 ticks generates a 1.6 Mhz clock
                 begin
                     clock_counter <= clock_counter + 1'b1;                      // Increment clock_counter
                 end

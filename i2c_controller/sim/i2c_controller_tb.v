@@ -14,7 +14,7 @@ i2c_controller i2c_controlleri (
     .en(tb_en),
     .mode(2'd1),
     .clk(tb_clk),
-    .peripheral_address(7'b1001001),
+    .slave_address(7'b1001001),
     .target_register(8'b10010110),
     .rw(1'b1),
     .din(16'b1010101011001100),
