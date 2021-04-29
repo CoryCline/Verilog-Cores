@@ -255,6 +255,7 @@ begin
                         sda_output <= 1'b0;
                         sda_idle <= 1'b0;
                         bit_cnt <= 4'd0;
+                        dout <= {byte_one, byte_two};
                         state <= STATE_STOP;
                     end
                     else 
@@ -272,7 +273,6 @@ begin
                 busy <= 1'b0;
                 i2c_clock_enable <= 1'b0;
                 state <= STATE_READY;
-                dout <= {byte_one, byte_two};
             end
         endcase
     end
