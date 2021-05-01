@@ -218,7 +218,7 @@ begin
                     else 
                     begin
                         sda_idle <= 1'b1;
-                        byte_one <= {byte_one[7:1], sda};
+                        byte_one <= {byte_one[6:0], sda};
                     end
                 end
             end
@@ -261,7 +261,7 @@ begin
                     else 
                     begin
                         sda_idle <= 1'b1;
-                        byte_two <= {byte_two[7:1], sda};
+                        byte_two <= {byte_two[6:0], sda};
                     end
                 end
             end
