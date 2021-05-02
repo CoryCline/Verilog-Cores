@@ -9,14 +9,17 @@ wire tb_scl;
 wire tb_sda;
 wire tb_busy;
 
+reg tb_rw = 1'b1;
+reg tb_data_length = 1'b0;
 
 i2c_controller i2c_controlleri (
     .en(tb_en),
-    .mode(2'd1),
+    .mode(2'd0),
     .clk(tb_clk),
-    .slave_address(7'b1001001),
+    .peripheral_address(7'b1001001),
     .target_register(8'b10010110),
-    .rw(1'b1),
+    .rw(tb_rw),
+    .data_length(tb_data_length),
     .din(16'b1010101011001100),
     .dout(tb_dout),
     .scl(tb_scl),
@@ -27,7 +30,10 @@ i2c_controller i2c_controlleri (
 always @(negedge tb_busy)
 begin
     tb_en <= 1'b0;
-    #100000 tb_en <= 1'b1;
+    #100000 
+    begin
+        tb_en <= 1'b1;
+    end
 end
 
 always
@@ -37,7 +43,7 @@ end
 
 initial 
 begin
-    #10000 tb_en <= 1'b1;
+    tb_en <= 1'b1;
 end
 
 endmodule
